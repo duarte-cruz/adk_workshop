@@ -1,179 +1,176 @@
-# 🏛️ Workshop: Engenharia de Agentes Autónomos com Google ADK
+# 🏛️ Workshop: Autonomous Agent Engineering with Google ADK
 
-Bem-vindo ao workshop de 90 minutos sobre o Agent Development Kit (ADK) da Google.
+Welcome to the workshop on the Google Agent Development Kit (ADK).
 
-Nesta sessão, vamos ultrapassar a teoria dos LLMs e mergulhar na prática da engenharia de agentes. O nosso objetivo é construir, instrumentar e testar um **"ScholarAgent"** – um agente de IA autónomo capaz de receber um tópico de investigação, pesquisar fontes académicas na web e sintetizar uma resposta coesa.
+In this session, we'll move past LLM theory and dive into the practice of agent engineering. Our goal is to focus on an agent's "logic" by completing a code skeleton to build a **"ScholarAgent"** – an autonomous AI agent capable of researching academic sources on the web and synthesizing a response.
 
-## 1\. Passos de Setup (Obrigatório)
+This repository contains all the material you need:
 
-Para garantir que os 90 minutos são focados em desenvolvimento, é **essencial** que chegues à sessão com o seguinte setup concluído.
+  * `requirements.txt`: The Python dependencies.
+  * `adk_scholar_workshop/agent.py`: The skeleton of our agent, which we will edit.
 
-### a. Instalar Python
+## 1\. Required Setup (Mandatory)
 
-Certifica-te que tens o **Python 3.9 ou superior** instalado e a funcionar no teu terminal.
-*Sugestão: Para poderes fazer uma melhor gestão de ambientes, recomendamos que utilizes uma ferramenta como o [Conda](https://docs.conda.io/en/latest/miniconda.html) ou [UV](https://github.com/astral-sh/uv).*
+To ensure our 90 minutes are focused on development, it is **essential** that you arrive at the session with the following setup completed.
 
-### b. Obter API Keys (O Passo Mais Importante)
+### a. Install Python
 
-Um agente é composto por um "cérebro" (LLM) e "mãos" (Ferramentas). Ambos requerem APIs.
+Make sure you have **Python 3.9 or higher** installed and working in your terminal.
+*Suggestion: To better manage your environments, we recommend using a tool like [Conda](https://docs.conda.io/en/latest/miniconda.html) or [UV](https://github.com/astral-sh/uv).*
 
-**i. Chave da API Gemini (O "Cérebro"):**
+### b. Get API Keys (The Most Important Step)
 
-1.  Visita o [Google AI Studio](https://aistudio.google.com/app/apikey).
-2.  Faz login e clica em "Create API key".
-3.  **Copia e guarda esta chave.**
+An agent is composed of a "brain" (LLM) and "hands" (Tools). Both require APIs.
 
-**ii. Chaves da API Google Search (As "Mãos"):**
-Este passo tem 2 partes e é o mais complexo:
+**i. Gemini API Key (The "Brain"):**
+
+1.  Visit the [Google AI Studio](https://aistudio.google.com/app/apikey).
+2.  Log in and click "Create API key".
+3.  **Copy and save this key.**
+
+**ii. Google Search API Keys (The "Hands"):**
+This step has 2 parts and is the most complex:
 
   * **Custom Search Engine ID:**
-    1.  Vai ao [Programmable Search Engine](https://programmablesearchengine.google.com/) e clica em "Adicionar".
-    2.  Configura-o para "Pesquisar em toda a Web". Dá-lhe um nome (ex: "ADK Search").
-    3.  Após criar, clica em "Editar motor de pesquisa" -\> "Informações básicas" e copia o **ID do motor de pesquisa (CSE ID)**.
+    1.  Go to the [Programmable Search Engine](https://programmablesearchengine.google.com/) and click "Add".
+    2.  Configure it to "Search the entire web". Give it a name (e.g., "ADK Search").
+    3.  After creating, click "Edit search engine" -\> "Basic Information" and copy the **"Search engine ID (CSE ID)"**.
   * **API Key:**
-    1.  Vai à [Google Cloud Console](https://console.cloud.google.com/apis/library/customsearch.googleapis.com).
-    2.  Ativa a **"Custom Search API"** para um projeto teu.
-    3.  Vai a "Credenciais", clica em "Criar Credenciais" -\> "Chave de API".
-    4.  **Copia e guarda esta chave.**
+    1.  Go to the [Google Cloud Console](https://console.cloud.google.com/apis/library/customsearch.googleapis.com).
+    2.  Enable the **"Custom Search API"** for one of your projects.
+    3.  Go to "Credentials", click "Create Credentials" -\> "API Key".
+    4.  **Copy and save this key.**
 
 -----
 
-## 2\. Inicialização do Projeto (Hands-On)
+## 2\. Project Initialization (Hands-On)
 
-Iremos começar o workshop prático aqui. Vamos criar uma pasta raiz para o nosso workshop, instalar as ferramentas (incluindo o `adk`) e, de seguida, usar o `adk` para criar o projeto do nosso agente.
+We will start the practical workshop here.
 
-### a. Criar Diretoria Raiz e Instalar Dependências
+### a. Clone the Repository (If you haven't already)
 
-1.  Cria a diretoria principal do workshop e entra nela:
+```bash
+# Clone the repository (replace with the correct URL)
+git clone https://github.com/duarte-cruz/adk_workshop.git
+cd adk_workshop
+```
 
-    ```bash
-    mkdir WorkshopADK
-    cd WorkshopADK
-    ```
+### b. Install Dependencies
 
-2.  Cria um ficheiro chamado `requirements.txt` nesta pasta (`WorkshopADK/requirements.txt`).
+1.  Create your virtual environment (Conda, UV, venv, etc.) if you wish.
 
-3.  Cola as seguintes dependências nesse ficheiro:
-
-    ```txt
-    # Ficheiro: requirements.txt
-    google-adk
-    google-api-python-client
-    google-auth-oauthlib
-    python-dotenv
-    ```
-
-4.  Instala estas dependências (idealmente dentro do teu ambiente virtual Conda/UV):
+2.  Install the dependencies from the `requirements.txt` file:
 
     ```bash
     pip install -r requirements.txt
     ```
 
-    (Agora já tens o comando `adk` disponível no teu terminal.)
+### c. Create Environment File (.env)
 
-### b. Criar a Estrutura do Agente
-
-1.  Ainda dentro da pasta `WorkshopADK`, executa o comando `adk create` para criar a subpasta do nosso agente:
-    ```bash
-    adk create adk_scholar_workshop
-    ```
-2.  Caso seja necessário escolher o modelo, seleciona a opção **"Other models (fill later)"**.
-3.  Agora terás a seguinte estrutura de pastas:
-    ```
-    WorkshopADK/
-    ├── requirements.txt
-    └── adk_scholar_workshop/
-        ├── agent.py
-        └── ... (outros ficheiros do ADK)
-    ```
-
-### c. Criar Ficheiro de Ambiente (.env)
-
-1.  Entra na pasta do agente que acabaste de criar:
+1.  Navigate to the agent's folder:
 
     ```bash
     cd adk_scholar_workshop
     ```
 
-2.  Dentro de `adk_scholar_workshop`, cria um ficheiro chamado `.env`.
+2.  Inside `adk_scholar_workshop`, create a file named `.env`.
 
-3.  Cola o seguinte conteúdo, substituindo `[...]` pelas chaves que obtiveste na Parte 1:
+3.  Paste the following content, replacing `[...]` with the keys you obtained in Part 1:
 
     ```ini
-    # Ficheiro: WorkshopADK/adk_scholar_workshop/.env
+    # File: adk_scholar_workshop/.env
 
-    # Chave do Google AI Studio
-    GEMINI_API_KEY=[A_TUA_CHAVE_GEMINI_API_KEY]
+    # Google AI Studio Key
+    GEMINI_API_KEY=[YOUR_GEMINI_API_KEY]
 
-    # Chaves da Google Search API
-    GOOGLE_API_KEY=[A_TUA_CHAVE_DA_GOOGLE_CLOUD_API]
-    GOOGLE_CSE_ID=[O_TEU_ID_DE_MOTOR_DE_PESQUISA_CSE_ID]
+    # Google Search API Keys
+    GOOGLE_API_KEY=[YOUR_GOOGLE_CLOUD_API_KEY]
+    GOOGLE_CSE_ID=[YOUR_CSE_ID]
     ```
 
 -----
 
-## 3\. A Tarefa: Dar Vida ao "ScholarAgent"
+## 3\. The Task: Complete the "ScholarAgent"
 
-O comando `adk create` gerou o ficheiro `adk_scholar_workshop/agent.py`. Este é o esqueleto do nosso agente. Vamos modificá-lo.
+Your goal is to open the `adk_scholar_workshop/agent.py` file and complete the sections marked with `TODO`.
 
-Abre o ficheiro `adk_scholar_workshop/agent.py` no teu editor de código.
+This is the skeleton you will find:
 
-### O Desafio
+```python
+# adk_scholar_workshop/agent.py
+# ... (imports and checks)
+    
+#TODO: Define AGENT_INSTRUCTION with the instruction promopt of the agent.
+AGENT_INSTRUCTION = """
+TODO: Add the instruction prompt for the ScholarAgent here.
+"""
+root_agent = Agent(
+    model='gemini-2.5-flash-lite',
+    name='root_agent',
+    description='A helpful assistant for user questions.',
+    instruction=AGENT_INSTRUCTION,
+    #TODO: Add google_search tool: https://google.github.io/adk-docs/tools/built-in-tools/#google-search
+)
+```
 
-A tua tarefa é editar o `agent.py` para cumprir os seguintes objetivos:
+### TODO 1: The Instruction (AGENT\_INSTRUCTION)
 
-**1. A Instrução (O "Cérebro"):**
-O ficheiro `agent.py` padrão vem com um `root_agent` que tem uma instrução genérica (`instruction='Answer user questions..._`). A tua tarefa é criar uma **instrução de nível académico** muito mais detalhada.
+Replace the `"TODO: ..."` text inside the `AGENT_INSTRUCTION` variable with a detailed, academic-level instruction.
 
-  * Cria uma variável (ex: `INSTRUCAO_AGENTE`) que contenha esta instrução.
-  * **Requisitos para a Instrução:** O agente deve ser instruído a:
-      * Identificar-se como "ScholarAgent", um assistente de investigação.
-      * Receber um tópico complexo do utilizador.
-      * Usar *explicitamente* a ferramenta `Google Search`.
-      * Encontrar um mínimo de 3 fontes de alta qualidade (académicas, artigos, etc.).
-      * Extrair o argumento principal de cada fonte.
-      * Sintetizar todos os argumentos numa resposta final coesa, citando as fontes (Título e URL).
+**Instruction Requirements:** The agent must be instructed to:
 
-**2. A Montagem (O "Corpo"):**
-Agora, modifica a definição do `root_agent` existente para usar a tua nova instrução.
+  * Identify itself as "ScholarAgent", an academic research assistant.
+  * Receive a complex topic from the user.
+  * Explicitly use the `Google Search` tool (ADK knows this is the name of the `Google Search` tool).
+  * Find a minimum of 3 high-quality sources (academic papers, articles, etc.).
+  * Extract the main argument from each source.
+  * Synthesize all arguments into a final, cohesive response, citing the sources (Title and URL).
 
-  * Adiciona as importações necessárias no topo (ex: `load_dotenv` e `Google Search`).
-  * Altera o `model` para o que desejas usar (ex: `'gemini-2.5-flash-lite'`).
-  * Altera o `name` para algo como "ScholarAgent".
-  * Altera a `description` para algo mais específico.
-  * Passa a tua variável `INSTRUCAO_AGENTE` para o parâmetro `instruction`.
-  * Verifica se a ferramenta `Google Search` é passada na lista `tools=[]`.
+### TODO 2: Add the Tool
+
+In the `root_agent` definition, the `tools` parameter is missing. Add the `tools` parameter and pass it the `Google Search` tool (which is already imported).
+
+**Hint:** The final agent definition should look something like this:
+
+```python
+root_agent = Agent(
+    model='gemini-2.5-flash-lite',
+    name='ScholarAgent', # <-- Good idea to change the name
+    description='A research agent that finds and synthesizes sources.', # <-- And the description
+    instruction=AGENT_INSTRUCTION,
+    tools=[google_search] # <-- Your solution for TODO 2
+)
+```
 
 -----
 
-## 4\. Executar e Testar
+## 4\. Run and Test
 
-Quando te sentires confiante com o teu `agent.py`, guarda o ficheiro.
+When you are confident with your changes to `agent.py`, save the file.
 
-1.  Certifica-te de que estás no terminal dentro da pasta `adk_scholar_workshop`:
+1.  Make sure you are in the terminal inside the repo root folder:
     ```bash
-    # Se ainda estiveres em WorkshopADK, executa:
-    cd adk_scholar_workshop
+    # (If you are in the folder `adk_scholar_workshop`, run: cd ..)
     ```
-2.  Executa o ADK Dev UI:
+2.  Run the ADK Dev UI:
     ```bash
     adk web
     ```
-3.  Abre o URL que aparece no terminal (normalmente `http://localhost:8080`) no teu browser.
+3.  Open the URL that appears in the terminal (usually `http://localhost:8080`) in your browser.
 
-### O Teste Temático (Halloween)
+### The Thematic Test (Halloween)
 
-Para testar se o teu agente funciona como esperado, usa o seguinte *query* na interface de chat:
+To test if your agent works as expected, use the following query in the chat interface:
 
-> **Query:** "Analisar o impacto histórico e psicológico da literatura gótica do século XIX."
+> **Query:** "Analyze the historical and psychological impact of 19th-century Gothic literature."
 
-Observa o *trace* (o registo de pensamentos) no lado direito. Vê se o agente segue os teus passos: se chama a ferramenta `Google Search` e se sintetiza a resposta como lhe pediste.
+Observe the "trace" (the thought log) on the right side. See if the agent follows your steps: if it calls the `Google Search` tool and synthesizes the response as you requested.
 
 -----
 
-## 5\. (Opcional) Desafios Extra
+## 5\. (Optional) Extra Challenges
 
-Se terminares mais cedo, tenta:
+If you finish early, try to:
 
-  * Modificar a instrução para que a resposta final seja formatada num JSON específico.
-  * Criar uma segunda ferramenta (uma simples função Python, ex: `get_current_date`) e adicioná-la à lista de `tools` do agente.
+  * Modify the instruction so the final response is formatted in a specific JSON.
+  * Create a second tool (a simple Python function, e.g., `get_current_date`) and add it to the agent's `tools` list.
