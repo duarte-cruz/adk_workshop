@@ -28,19 +28,6 @@ An agent is composed of a "brain" (LLM) and "hands" (Tools). Both require APIs.
 2.  Log in and click "Create API key".
 3.  **Copy and save this key.**
 
-**ii. Google Search API Keys (The "Hands"):**
-This step has 2 parts and is the most complex:
-
-  * **Custom Search Engine ID:**
-    1.  Go to the [Programmable Search Engine](https://programmablesearchengine.google.com/) and click "Add".
-    2.  Configure it to "Search the entire web". Give it a name (e.g., "ADK Search").
-    3.  After creating, click "Edit search engine" -\> "Basic Information" and copy the **"Search engine ID (CSE ID)"**.
-  * **API Key:**
-    1.  Go to the [Google Cloud Console](https://console.cloud.google.com/apis/library/customsearch.googleapis.com).
-    2.  Enable the **"Custom Search API"** for one of your projects.
-    3.  Go to "Credentials", click "Create Credentials" -\> "API Key".
-    4.  **Copy and save this key.**
-
 -----
 
 ## 2\. Project Initialization (Hands-On)
@@ -101,10 +88,6 @@ cd adk_workshop
 
     # Google AI Studio Key
     GEMINI_API_KEY=[YOUR_GEMINI_API_KEY]
-
-    # Google Search API Keys
-    GOOGLE_API_KEY=[YOUR_GOOGLE_CLOUD_API_KEY]
-    GOOGLE_CSE_ID=[YOUR_CSE_ID]
     ```
 
 -----

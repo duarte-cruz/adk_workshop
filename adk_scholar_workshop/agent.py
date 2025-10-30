@@ -9,8 +9,6 @@ load_dotenv()
 # Simple checks (useful for debugging)
 if not os.getenv("GEMINI_API_KEY"):
     raise ValueError("GEMINI_API_KEY not found. Set it in the .env file")
-if not os.getenv("GOOGLE_API_KEY") or not os.getenv("GOOGLE_CSE_ID"):
-    raise ValueError("Google Search keys not found. The search tool will fail.")
 
 #TODO: Define AGENT_INSTRUCTION with the instruction prompt of the agent.
 AGENT_INSTRUCTION = """

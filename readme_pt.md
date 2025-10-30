@@ -28,19 +28,6 @@ Um agente é composto por um "cérebro" (LLM) e "mãos" (Ferramentas). Ambos req
 2.  Faz login e clica em "Create API key".
 3.  **Copia e guarda esta chave.**
 
-**ii. Chaves da API Google Search (As "Mãos"):**
-Este passo tem 2 partes e é o mais complexo:
-
-  * **Custom Search Engine ID:**
-    1.  Vai ao [Programmable Search Engine](https://programmablesearchengine.google.com/) e clica em "Adicionar".
-    2.  Configura-o para "Pesquisar em toda a Web". Dá-lhe um nome (ex: "ADK Search").
-    3.  Após criar, clica em "Editar motor de pesquisa" -\> "Informações básicas" e copia o **ID do motor de pesquisa (CSE ID)**.
-  * **API Key:**
-    1.  Vai à [Google Cloud Console](https://console.cloud.google.com/apis/library/customsearch.googleapis.com).
-    2.  Ativa a **"Custom Search API"** para um projeto teu.
-    3.  Vai a "Credenciais", clica em "Criar Credenciais" -\> "Chave de API".
-    4.  **Copia e guarda esta chave.**
-
 -----
 
 ## 2\. Inicialização do Projeto (Hands-On)
@@ -101,10 +88,6 @@ cd adk_workshop
 
     # Chave do Google AI Studio
     GEMINI_API_KEY=[A_TUA_CHAVE_GEMINI_API_KEY]
-
-    # Chaves da Google Search API
-    GOOGLE_API_KEY=[A_TUA_CHAVE_DA_GOOGLE_CLOUD_API]
-    GOOGLE_CSE_ID=[O_TEU_ID_DE_MOTOR_DE_PESQUISA_CSE_ID]
     ```
 
 -----
