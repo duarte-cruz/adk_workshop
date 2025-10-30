@@ -12,7 +12,7 @@ if not os.getenv("GEMINI_API_KEY"):
 if not os.getenv("GOOGLE_API_KEY") or not os.getenv("GOOGLE_CSE_ID"):
     raise ValueError("Google Search keys not found. The search tool will fail.")
 
-#TODO: Define AGENT_INSTRUCTION with the instruction promopt of the agent.
+#TODO: Define AGENT_INSTRUCTION with the instruction prompt of the agent.
 AGENT_INSTRUCTION = """
 TODO: Add the instruction prompt for the ScholarAgent here.
 """
