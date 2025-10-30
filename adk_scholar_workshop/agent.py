@@ -1,22 +1,22 @@
 import os
 from dotenv import load_dotenv
 
-# --- Importações do ADK ---
+# --- ADK imports ---
 from google.adk.agents import Agent
-from google.adk.tools import google_search
 
 load_dotenv()
 
-# Verificação simples (bom para debugging)
+# Simple checks (useful for debugging)
 if not os.getenv("GEMINI_API_KEY"):
-    raise ValueError("GEMINI_API_KEY não encontrada. Define-a no ficheiro .env")
+    raise ValueError("GEMINI_API_KEY not found. Set it in the .env file")
 if not os.getenv("GOOGLE_API_KEY") or not os.getenv("GOOGLE_CSE_ID"):
-    print("Aviso: Chaves do Google Search não encontradas. A ferramenta de pesquisa irá falhar.")
-1
+    raise ValueError("Google Search keys not found. The search tool will fail.")
+
 #TODO: Define AGENT_INSTRUCTION with the instruction promopt of the agent.
 AGENT_INSTRUCTION = """
 TODO: Add the instruction prompt for the ScholarAgent here.
 """
+
 root_agent = Agent(
     model='gemini-2.5-flash-lite',
     name='root_agent',

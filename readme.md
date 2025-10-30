@@ -16,7 +16,7 @@ To ensure our 90 minutes are focused on development, it is **essential** that yo
 ### a. Install Python
 
 Make sure you have **Python 3.9 or higher** installed and working in your terminal.
-*Suggestion: To better manage your environments, we recommend using a tool like [Conda](https://docs.conda.io/en/latest/miniconda.html) or [UV](https://github.com/astral-sh/uv).*
+*Suggestion: To better manage your environments, we strongly recommend using [UV](https://github.com/astral-sh/uv) from Astral. The following instructions will assume you are using it.*
 
 ### b. Get API Keys (The Most Important Step)
 
@@ -57,12 +57,31 @@ cd adk_workshop
 
 ### b. Install Dependencies
 
-1.  Create your virtual environment (Conda, UV, venv, etc.) if you wish.
-
-2.  Install the dependencies from the `requirements.txt` file:
+1.  Create your virtual environment using `uv`:
 
     ```bash
-    pip install -r requirements.txt
+    uv venv
+    ```
+
+2.  Activate the environment:
+
+      * **Linux/macOS (bash/zsh):**
+        ```bash
+        source .venv/bin/activate
+        ```
+      * **Windows (Command Prompt / git bash):**
+        ```bash
+        .venv\Scripts\activate
+        ```
+      * **Windows (PowerShell):**
+        ```powershell
+        .venv\Scripts\Activate.ps1
+        ```
+
+3.  Install the dependencies from the `requirements.txt` file using `uv`:
+
+    ```bash
+    uv pip install -r requirements.txt
     ```
 
 ### c. Create Environment File (.env)

@@ -15,8 +15,8 @@ Para garantir que os 90 minutos são focados em desenvolvimento, é **essencial*
 
 ### a. Instalar Python
 
-Certifica-te que tens o **Python 3.9 ou superior** instalado e a funcionar no teu terminal.
-*Sugestão: Para poderes fazer uma melhor gestão de ambientes, recomendamos que utilizes uma ferramenta como o [Conda](https://docs.conda.io/en/latest/miniconda.html) ou [UV](https://github.com/astral-sh/uv).*
+Certifique-se de que tem o **Python 3.9 ou superior** instalado e a funcionar no terminal.  
+Sugestão: Para gerir melhor os ambientes, recomendamos vivamente o uso de [UV](https://github.com/astral-sh/uv) da Astral. As instruções seguintes assumem que está a utilizá‑lo.
 
 ### b. Obter API Keys (O Passo Mais Importante)
 
@@ -57,12 +57,31 @@ cd adk_workshop
 
 ### b. Instalar Dependências
 
-1.  Cria o teu ambiente virtual (Conda, UV, venv, etc.) se o desejares.
-
-2.  Instala as dependências que estão no ficheiro `requirements.txt`:
+1.  Crie o seu ambiente virtual com o `uv`:
 
     ```bash
-    pip install -r requirements.txt
+    uv venv
+    ```
+
+2.  Active o ambiente:
+
+    * **Linux/macOS (bash/zsh):**
+      ```bash
+      source .venv/bin/activate
+      ```
+    * **Windows (Command Prompt / Git Bash):**
+      ```bash
+      .venv\Scripts\activate
+      ```
+    * **Windows (PowerShell):**
+      ```powershell
+      .venv\Scripts\Activate.ps1
+      ```
+
+3.  Instale as dependências a partir do ficheiro  usando o `uv`:
+
+    ```bash
+    uv pip install -r requirements.txt
     ```
 
 ### c. Criar Ficheiro de Ambiente (.env)
